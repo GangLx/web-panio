@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Panio</title>
+        <style>
+            .panio-div {
+                position: absolute;
+                bottom: 10px;
+            }
+            .panio-div span {
+                width: 30px;
+                height: 150px;
+                background-color: white;
+                display: inline-block;
+                border: 1px black solid;
+                margin: 0;
+                line-height: 150px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="panio-div">
+            <span onclick="btn_do(263.63)">1</span>
+            <span onclick="btn_do(293.66)">2</span>
+            <span onclick="btn_do(329.63)">3</span>
+            <span onclick="btn_do(349.23)">4</span>
+            <span onclick="btn_do(392.00)">5</span>
+            <span onclick="btn_do(440.00)">6</span>
+            <span onclick="btn_do(493.88)">7</span>
+            <span onclick="btn_do(523.25)">1</span>
+        </div>
+        <script>
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+            let oscillator = {node: null, state: null}
+            function btn_do(value) {
+                pause('click')
+                oscillator.state = 'playing'
+                oscillator.node = audioCtx.createOscillator()
+                oscillator.node.type = 'square'
+                oscillator.node.frequency.value = value // oscillator.node.frequency.setValueAtTime(value, audioCtx.currentTime);
+                oscillator.node.connect(audioCtx.destination)
+                oscillator.node.start()
+                setTimeout(() => {
+                    pause('time')
+                }, 300)
+            }
+            function pause(type) {
+                console.log(type)
+                if (oscillator.state === 'playing') {
+                    oscillator.node.stop()
+                    oscillator.state = null
+                }
+            }
+        </script>
+    </body>
+</html>
