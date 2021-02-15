@@ -38,7 +38,7 @@
                 oscillator.state = 'playing'
                 oscillator.node = audioCtx.createOscillator()
                 oscillator.node.type = 'square'
-                oscillator.node.frequency.value = value // oscillator.node.frequency.setValueAtTime(value, audioCtx.currentTime);
+                oscillator.node.frequency.value = value // oscillator.node.frequency.setValueAtTime(value, audioCtx.currentTime)
                 oscillator.node.connect(audioCtx.destination)
                 oscillator.node.start()
                 setTimeout(() => {
