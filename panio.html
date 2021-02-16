@@ -6,6 +6,7 @@
             .panio-div {
                 position: absolute;
                 bottom: 10px;
+                display: none;
             }
             .panio-div span {
                 width: 30px;
@@ -21,14 +22,14 @@
     </head>
     <body>
         <div class="panio-div">
-            <span onclick="btn_do(263.63)">1</span>
-            <span onclick="btn_do(293.66)">2</span>
-            <span onclick="btn_do(329.63)">3</span>
-            <span onclick="btn_do(349.23)">4</span>
-            <span onclick="btn_do(392.00)">5</span>
-            <span onclick="btn_do(440.00)">6</span>
-            <span onclick="btn_do(493.88)">7</span>
-            <span onclick="btn_do(523.25)">1</span>
+            <span onclick="btn_do(1)">1</span>
+            <span onclick="btn_do(2)">2</span>
+            <span onclick="btn_do(3)">3</span>
+            <span onclick="btn_do(4)">4</span>
+            <span onclick="btn_do(5)">5</span>
+            <span onclick="btn_do(6)">6</span>
+            <span onclick="btn_do(7)">7</span>
+            <span onclick="btn_do(8)">1</span>
         </div>
         <script>
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
@@ -38,7 +39,7 @@
                 oscillator.state = 'playing'
                 oscillator.node = audioCtx.createOscillator()
                 oscillator.node.type = 'square'
-                oscillator.node.frequency.value = value // oscillator.node.frequency.setValueAtTime(value, audioCtx.currentTime);
+                oscillator.node.frequency.value = getFrequency(value) // oscillator.node.frequency.setValueAtTime(getFrequency(value), audioCtx.currentTime)
                 oscillator.node.connect(audioCtx.destination)
                 oscillator.node.start()
                 setTimeout(() => {
@@ -52,6 +53,43 @@
                     oscillator.state = null
                 }
             }
+            function getFrequency(value) {
+                let frequency = 263.63
+                value = parseInt(value)
+                switch(value) {
+                    case 1:
+                        frequency = 263.63
+                        break
+                    case 2:
+                        frequency = 293.66
+                        break
+                    case 3:
+                        frequency = 329.63
+                        break
+                    case 4:
+                        frequency = 349.23
+                        break
+                    case 5:
+                        frequency = 392.00
+                        break
+                    case 6:
+                        frequency = 440.00
+                        break
+                    case 7:
+                        frequency = 493.88
+                        break
+                    case 8:
+                        frequency = 523.25
+                        break
+                    default:
+                        frequency = 263.63
+                        break
+                }
+                return frequency
+            }
+            document.addEventListener('keyup', (e) => {
+                btn_do(e.key)
+            })
         </script>
     </body>
 </html>
