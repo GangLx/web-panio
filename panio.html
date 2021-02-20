@@ -5,18 +5,25 @@
         <style>
             .panio-div {
                 position: absolute;
-                bottom: 10px;
-                display: none;
+                bottom: 30%;
+                left: 40%;
             }
             .panio-div span {
-                width: 30px;
-                height: 150px;
+                width: 40px;
+                height: 180px;
+                line-height: 180px;
                 background-color: white;
                 display: inline-block;
-                border: 1px black solid;
+                border: 2px black solid;
                 margin: 0;
-                line-height: 150px;
                 text-align: center;
+            }
+            .panio-div .clickSpan {
+                width: 42px;
+                height: 181px;
+                line-height: 181px;
+                background-color: gray;
+                border: 1px black solid;
             }
         </style>
     </head>
@@ -33,56 +40,68 @@
         </div>
         <script>
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-            let oscillator = {node: null, state: null}
             function btn_do(value) {
-                pause('click')
-                oscillator.state = 'playing'
-                oscillator.node = audioCtx.createOscillator()
-                oscillator.node.type = 'square'
-                oscillator.node.frequency.value = getFrequency(value) // oscillator.node.frequency.setValueAtTime(getFrequency(value), audioCtx.currentTime)
-                oscillator.node.connect(audioCtx.destination)
-                oscillator.node.start()
-                setTimeout(() => {
-                    pause('time')
-                }, 300)
+                tapSpan(value)
+                let gain = audioCtx.createGain()
+                let osc = audioCtx.createOscillator()
+                osc.type = 'sine'
+                osc.frequency.value = getFrequency(value) 
+                //osc.frequency.setValueAtTime(getFrequency(value), audioCtx.currentTime)
+                osc.connect(gain)
+                gain.connect(audioCtx.destination)
+                gain.gain.value = 1
+                osc.start(audioCtx.currentTime)
+                gain.gain.linearRampToValueAtTime(0.6, audioCtx.currentTime + 0.01)
+                osc.stop(audioCtx.currentTime + 0.5)
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1)
             }
-            function pause(type) {
-                console.log(type)
-                if (oscillator.state === 'playing') {
-                    oscillator.node.stop()
-                    oscillator.state = null
-                }
+            
+            function tapSpan(value) {
+                const spanDivs = document.querySelectorAll('.panio-div span')
+                spanDivs.forEach((s, i) => {
+                    s.className = ''
+                    if ((i + 1) == value) {
+                        s.className = 'clickSpan'
+                        setTimeout(() => {
+                           s.className = '' 
+                        }, 600) 
+                        return false
+                    }
+                })
+                
+                
             }
+            
             function getFrequency(value) {
-                let frequency = 263.63
+                let frequency = 262
                 value = parseInt(value)
                 switch(value) {
                     case 1:
-                        frequency = 263.63
+                        frequency = 262
                         break
                     case 2:
-                        frequency = 293.66
+                        frequency = 294
                         break
                     case 3:
-                        frequency = 329.63
+                        frequency = 330
                         break
                     case 4:
-                        frequency = 349.23
+                        frequency = 349
                         break
                     case 5:
-                        frequency = 392.00
+                        frequency = 392
                         break
                     case 6:
-                        frequency = 440.00
+                        frequency = 440
                         break
                     case 7:
-                        frequency = 493.88
+                        frequency = 494
                         break
                     case 8:
-                        frequency = 523.25
+                        frequency = 523
                         break
                     default:
-                        frequency = 263.63
+                        frequency = 0
                         break
                 }
                 return frequency
