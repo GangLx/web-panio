@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Panio</title>
+        <style>
+            .panio-div {
+                position: absolute;
+                top: 500px;
+            }
+            .panio-div span {
+                width: 300px;
+                height: 100px;
+                line-height: 100px;
+                background-color: white;
+                display: block;
+                border: 2px black solid;
+                margin: 0;
+                text-align: center;
+                writing-mode: vertical-lr;
+                margin-top: 5px;
+                font-weight: bold;
+                font-size: 20px;
+            }
+            .panio-div .clickSpan {
+                width: 302px;
+                height: 102px;
+                line-height: 100px;
+                background-color: gray;
+                border: 1px black solid;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="panio-div">
+            <span onclick="btn_do(1)">1</span>
+            <span onclick="btn_do(2)">2</span>
+            <span onclick="btn_do(3)">3</span>
+            <span onclick="btn_do(4)">4</span>
+            <span onclick="btn_do(5)">5</span>
+            <span onclick="btn_do(6)">6</span>
+            <span onclick="btn_do(7)">7</span>
+            <span onclick="btn_do(8)">1</span>
+        </div>
+        <script>
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+            function btn_do(value) {
+                tapSpan(value)
+                let gain = audioCtx.createGain()
+                let osc = audioCtx.createOscillator()
+                osc.type = 'sine'
+                osc.frequency.value = getFrequency(value) 
+                //osc.frequency.setValueAtTime(getFrequency(value), audioCtx.currentTime)
+                osc.connect(gain)
+                gain.connect(audioCtx.destination)
+                gain.gain.value = 1
+                osc.start(audioCtx.currentTime)
+                gain.gain.linearRampToValueAtTime(0.6, audioCtx.currentTime + 0.01)
+                osc.stop(audioCtx.currentTime + 0.5)
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1)
+            }
+            
+            function tapSpan(value) {
+                const spanDivs = document.querySelectorAll('.panio-div span')
+                spanDivs.forEach((s, i) => {
+                    s.className = ''
+                    if ((i + 1) == value) {
+                        s.className = 'clickSpan'
+                        setTimeout(() => {
+                           s.className = '' 
+                        }, 600) 
+                        return false
+                    }
+                })
+                
+                
+            }
+            
+            function getFrequency(value) {
+                let frequency = 262
+                value = parseInt(value)
+                switch(value) {
+                    case 1:
+                        frequency = 262
+                        break
+                    case 2:
+                        frequency = 294
+                        break
+                    case 3:
+                        frequency = 330
+                        break
+                    case 4:
+                        frequency = 349
+                        break
+                    case 5:
+                        frequency = 392
+                        break
+                    case 6:
+                        frequency = 440
+                        break
+                    case 7:
+                        frequency = 494
+                        break
+                    case 8:
+                        frequency = 523
+                        break
+                    default:
+                        frequency = 0
+                        break
+                }
+                return frequency
+            }
+            document.addEventListener('keyup', (e) => {
+                btn_do(e.key)
+            })
+        </script>
+    </body>
+</html>
